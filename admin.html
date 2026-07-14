@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Admin | Bigwig Media Digital</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { padding: 40px 24px; }
+    .admin-panel { max-width: 1080px; margin: 0 auto; }
+    .admin-panel h1 { color: var(--teal); margin-bottom: 18px; }
+    .admin-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 20px; }
+    .admin-actions button, .admin-actions a { border-radius: 8px; padding: 10px 18px; background: var(--navy-800); color: var(--text-light); border: 1px solid var(--border-soft); transition: background 0.2s ease; }
+    .admin-actions button:hover, .admin-actions a:hover { background: var(--navy-700); }
+    .admin-note { color: var(--text-muted); margin-bottom: 20px; }
+    .table-container { overflow-x: auto; background: var(--navy-800); border: 1px solid var(--border-soft); border-radius: var(--radius); }
+    table { width: 100%; border-collapse: collapse; min-width: 820px; }
+    th, td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); text-align: left; font-size: 0.95rem; }
+    th { color: var(--text-light); font-weight: 700; background: rgba(31,199,212,0.08); }
+    td { color: var(--text-muted); }
+    .lead-actions button { color: var(--teal); background: transparent; border: 1px solid var(--teal); }
+    .lead-actions button:hover { background: rgba(31,199,212,0.1); }
+    .empty-state { padding: 40px; text-align: center; color: var(--text-muted); }
+    .status { margin-left: auto; color: var(--teal); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="admin-panel">
+    <div class="admin-actions">
+      <div>
+        <h1>Lead Admin</h1>
+        <p class="admin-note">View captured leads from the contact form and delete entries as needed.</p>
+      </div>
+      <button id="refreshBtn">Refresh</button>
+      <a href="/">Open Homepage</a>
+      <span class="status" id="statusText">Loading…</span>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Service</th>
+            <th>Requirements</th>
+            <th>Received At</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="leadsBody">
+          <tr><td colspan="8" class="empty-state">Loading leads…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Reset Admin Password — Bigwig Media Digital</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { padding: 40px 24px; }
+    .wrap { max-width: 480px; margin: 48px auto; background: var(--navy-800); border:1px solid var(--border-soft); padding:20px; border-radius:12px; }
+    input { width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-soft); background:var(--navy-700); color:var(--text-light); margin-bottom:8px; }
+    .msg { margin-top:8px; color:var(--text-muted); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h2>Reset Admin Password</h2>
+    <p class="msg">Enter the token you received and choose a new password.</p>
+    <input id="token" placeholder="Reset token" />
+    <input id="newPass" type="password" placeholder="New password (min 6 chars)" />
+    <button id="resetBtn" class="btn btn-primary">Reset Password</button>
+    <p id="result" class="msg"></p>
+  </div>
+
+  <script src="admin-reset.js"></script>
+  <script>
+    // prefill token from query param
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('token')) document.getElementById('token').value = params.get('token');
+  </script>
+</body>
+</html>

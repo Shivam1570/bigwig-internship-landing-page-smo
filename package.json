@@ -1,0 +1,14 @@
+{
+  "name": "smopage",
+  "version": "1.0.0",
+  "description": "SMO landing page with backend lead capture",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.4",
+    "nodemailer": "^6.9.3",
+    "sqlite3": "^5.1.6"
+  }
+}

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Login — Bigwig Media Digital</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { padding: 32px 18px; background: var(--navy-900); }
+    .auth-wrap { max-width: 460px; margin: 56px auto; background: linear-gradient(180deg, rgba(17,28,45,0.6), rgba(10,18,30,0.6)); border: 1px solid var(--border-soft); padding: 28px; border-radius: 14px; box-shadow: 0 20px 40px rgba(3,8,15,0.6); }
+    .auth-header { display:flex; gap:14px; align-items:center; margin-bottom: 18px; }
+    .auth-header .logo-mark { width:46px; height:46px; border-radius:10px; font-size:1.2rem; display:flex; align-items:center; justify-content:center; color:var(--navy-900); background: linear-gradient(135deg,var(--teal),#6f6fe8); }
+    .auth-header h1 { font-family: var(--font-display); font-size:1.3rem; margin:0; color:var(--text-light); }
+    .auth-header p { margin:0; color:var(--text-muted); font-size:0.95rem; }
+
+    .tabs { display:flex; gap:8px; margin:18px 0; }
+    .tabs button { flex:1; padding:10px; border-radius:10px; background:transparent; border:1px solid var(--border-soft); color:var(--text-light); }
+    .tabs button.active { background: linear-gradient(90deg,var(--teal),#6f6fe8); color:var(--navy-900); font-weight:700; }
+
+    form { display:none; gap:12px; }
+    form.active { display:flex; flex-direction:column; }
+    .field { display:flex; flex-direction:column; gap:8px; }
+    label { font-size:0.85rem; color:var(--text-muted); }
+    input { padding:12px; border-radius:10px; border:1px solid var(--border-soft); background:var(--navy-700); color:var(--text-light); }
+    .row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .muted { color:var(--text-muted); font-size:0.9rem; }
+    .msg { margin-top:8px; font-size:0.95rem; color: #ffb3b3; }
+    .actions { display:flex; gap:12px; margin-top:6px; }
+    .btn { padding:12px 16px; border-radius:10px; }
+    .btn-block { width:100%; }
+    @media (max-width:480px){ .auth-wrap{ margin:28px 12px; padding:20px; } }
+  </style>
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-header">
+      <div class="logo-mark">B</div>
+      <div>
+        <h1>Admin</h1>
+        <p class="muted"></p>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button id="tab-login" class="active">Login</button>
+      <button id="tab-register">Register</button>
+      <button id="tab-forgot">Forgot</button>
+    </div>
+
+    <form id="loginForm" class="active" autocomplete="on">
+      <div class="field">
+        <label for="loginUser">Email</label>
+        <input id="loginUser" type="email" placeholder="you@company.com" required>
+      </div>
+      <div class="field">
+        <label for="loginPass">Password</label>
+        <input id="loginPass" type="password" placeholder="Enter password" required>
+      </div>
+      <div class="row">
+        <label style="display:flex;align-items:center;gap:8px;" class="muted"><input id="rememberMe" type="checkbox"> Remember me</label>
+        <label class="muted"><input id="toggleLoginPass" type="checkbox"> Show</label>
+      </div>
+      <div class="actions">
+        <button type="button" id="loginBtn" class="btn btn-primary btn-block">Login</button>
+      </div>
+      <div class="msg" id="loginMsg"></div>
+    </form>
+
+    <form id="registerForm">
+      <div class="field">
+        <label for="regUser">Email</label>
+        <input id="regUser" type="email" placeholder="you@company.com" required>
+      </div>
+      <div class="field">
+        <label for="regPass">Password</label>
+        <input id="regPass" type="password" placeholder="Password (min 6 chars)" required>
+      </div>
+      <div class="actions">
+        <button type="button" id="regBtn" class="btn btn-outline btn-block">Create account</button>
+      </div>
+      <div class="msg" id="regMsg"></div>
+    </form>
+
+    <form id="forgotForm">
+      <div class="field">
+        <label for="forgotUser">Email</label>
+        <input id="forgotUser" type="email" placeholder="you@company.com" required>
+      </div>
+      <div class="actions">
+        <button type="button" id="forgotBtn" class="btn btn-outline btn-block">Send reset token</button>
+      </div>
+      <div class="msg" id="forgotMsg"></div>
+    </form>
+  </div>
+
+  <script src="admin-auth.js"></script>
+</body>
+</html>

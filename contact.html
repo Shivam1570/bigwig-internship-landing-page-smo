@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="https://www.bigwigmediadigital.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FBigwig_logo__final.f181d8a8.png&w=1920&q=75">
+<title>Let's Grow Together | Bigwig Media Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* --- Direct styling overrides for the separate contact page layout --- */
+body.contact-page {
+  background: #030b16; /* Extra dark theme background */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 24px 80px;
+  position: relative;
+}
+
+.close-container {
+  position: absolute;
+  top: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+}
+
+.close-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(31, 199, 212, 0.1);
+  border: 2px solid var(--teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.close-btn:hover {
+  background: var(--teal);
+  transform: scale(1.05);
+}
+
+.close-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: #fff;
+  transition: fill 0.2s ease;
+}
+
+.close-btn:hover svg {
+  fill: var(--navy-900);
+}
+
+.contact-container {
+  max-width: 860px;
+  width: 100%;
+  margin-top: 60px;
+  z-index: 2;
+}
+
+.contact-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.contact-header h1 {
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.contact-header p {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contact-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 720px) {
+  .contact-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Custom styled inputs for contact form */
+.contact-form .field input,
+.contact-form .field select,
+.contact-form .field textarea {
+  background: #081628;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
+}
+
+.contact-form .field input:focus,
+.contact-form .field select:focus,
+.contact-form .field textarea:focus {
+  border-color: var(--teal);
+}
+
+/* Phone input group styling */
+.phone-group {
+  display: flex;
+  gap: 12px;
+}
+
+.country-select-wrapper {
+  flex-shrink: 0;
+  width: 160px;
+}
+
+.phone-number-field {
+  flex-grow: 1;
+}
+
+/* Services checkbox cards styling */
+.services-selection {
+  margin-top: 10px;
+}
+
+.services-selection h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 860px) {
+  .services-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 400px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.service-card {
+  background: #081628;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: var(--text-light);
+  user-select: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.service-card input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--teal);
+  cursor: pointer;
+}
+
+.service-card:hover {
+  border-color: rgba(31, 199, 212, 0.4);
+}
+
+.service-card.is-active {
+  border-color: var(--teal);
+  background: rgba(31, 199, 212, 0.05);
+}
+
+/* Special button styles for submit */
+.btn-submit-contact {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  font-weight: 700;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 10px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.btn-submit-contact:hover {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: var(--navy-900);
+  box-shadow: 0 0 15px rgba(31, 199, 212, 0.3);
+}
+
+/* Floating corner button styling */
+.float-btn {
+  position: fixed;
+  bottom: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  z-index: 99;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.float-left-btn {
+  left: 30px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.float-left-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.08);
+}
+
+.float-left-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: #fff;
+}
+
+.float-right-btn.whatsapp-btn {
+  right: 30px;
+  background: #25d366;
+  border: none;
+}
+
+.float-right-btn.whatsapp-btn:hover {
+  background: #20ba5a;
+  transform: scale(1.08);
+}
+
+.float-right-btn svg {
+  width: 24px;
+  height: 24px;
+  fill: #fff;
+}
+</style>
+</head>
+<body class="contact-page">
+
+<div class="close-container">
+  <a href="index.html" class="close-btn" aria-label="Close page">
+    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+  </a>
+</div>
+
+<div class="contact-container">
+  <div class="contact-header">
+    <h1>Let's Grow Together 🚀</h1>
+    <p>Tell us what you need - we'll connect you instantly.</p>
+  </div>
+
+  <form class="contact-form" id="contactForm">
+    <div class="contact-form-grid">
+      <div class="field">
+        <input type="text" id="fullName" name="fullName" placeholder="Full Name" required>
+        <span class="field-error" data-for="fullName"></span>
+      </div>
+      <div class="field">
+        <input type="email" id="email" name="email" placeholder="Email ID" required>
+        <span class="field-error" data-for="email"></span>
+      </div>
+    </div>
+
+    <div class="phone-group">
+      <div class="country-select-wrapper field">
+        <select id="countryCode" name="countryCode">
+          <option value="+91" selected>IN India (+91)</option>
+          <option value="+1">US USA (+1)</option>
+          <option value="+44">UK UK (+44)</option>
+          <option value="+971">AE UAE (+971)</option>
+          <option value="+61">AU Australia (+61)</option>
+          <option value="+1">CA Canada (+1)</option>
+          <option value="+65">SG Singapore (+65)</option>
+        </select>
+      </div>
+      <div class="field phone-number-field">
+        <input type="tel" id="phone" name="phone" placeholder="Phone Number" required>
+        <span class="field-error" data-for="phone"></span>
+      </div>
+    </div>
+
+    <div class="services-selection">
+      <h3>Select Services You Need:</h3>
+      <div class="services-grid">
+        <label class="service-card">
+          <input type="checkbox" name="services" value="SEO">
+          <span>SEO</span>
+        </label>
+        <label class="service-card">
+          <input type="checkbox" name="services" value="SMM">
+          <span>SMM</span>
+        </label>
+        <label class="service-card">
+          <input type="checkbox" name="services" value="Performance Marketing">
+          <span>Performance Marketing</span>
+        </label>
+        <label class="service-card">
+          <input type="checkbox" name="services" value="Content Marketing">
+          <span>Content Marketing</span>
+        </label>
+        <label class="service-card">
+          <input type="checkbox" name="services" value="Website Development">
+          <span>Website Development</span>
+        </label>
+        <label class="service-card">
+          <input type="checkbox" name="services" value="Email Marketing">
+          <span>Email Marketing</span>
+        </label>
+        <label class="service-card">
+          <input type="checkbox" name="services" value="SMO">
+          <span>SMO</span>
+        </label>
+        <label class="service-card">
+          <input type="checkbox" name="services" value="Graphic & Video">
+          <span>Graphic & Video</span>
+        </label>
+        <label class="service-card">
+          <input type="checkbox" name="services" value="Affiliate Marketing">
+          <span>Affiliate Marketing</span>
+        </label>
+        <label class="service-card">
+          <input type="checkbox" name="services" value="Influencer Marketing">
+          <span>Influencer Marketing</span>
+        </label>
+        <label class="service-card">
+          <input type="checkbox" name="services" value="ORM">
+          <span>ORM</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <textarea id="requirements" name="requirements" rows="4" placeholder="Explain your requirements"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-submit-contact">SUBMIT</button>
+    <p class="form-success" id="formSuccess" hidden>Thanks! We'll be in touch shortly.</p>
+  </form>
+</div>
+
+<!-- Floating Action Buttons -->
+<button class="float-btn float-left-btn" id="shareBtn" aria-label="Share">
+  <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+</button>
+
+<a href="https://wa.me/919685892813" class="float-btn float-right-btn whatsapp-btn" target="_blank" aria-label="WhatsApp Us">
+  <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.458L0 24zm6.59-4.846c1.62.962 3.21 1.6 5.343 1.601 5.475 0 9.932-4.457 9.935-9.932.002-2.651-1.02-5.143-2.877-7c-1.856-1.855-4.324-2.878-6.98-2.882-5.485 0-9.94 4.46-9.943 9.937-.001 2.023.52 4 1.505 5.722l-.997 3.639 3.738-.981c.002-.001.002-.001.002-.002zm9.643-6.52c-.27-.135-1.595-.786-1.843-.876-.248-.09-.43-.135-.61.135-.18.27-.7 1.135-.858 1.32-.158.185-.316.208-.586.073-.27-.135-1.14-.42-2.17-1.34-.802-.716-1.343-1.6-1.5-1.87-.158-.27-.017-.417.118-.552.122-.122.27-.315.405-.473.135-.158.18-.27.27-.45.09-.18.045-.338-.023-.473-.067-.136-.61-1.468-.835-2.008-.22-.527-.44-.455-.61-.464-.157-.008-.337-.01-.517-.01-.18 0-.473.067-.72.337-.247.27-.945.923-.945 2.25s.967 2.61 1.102 2.79c.135.18 1.902 2.904 4.6 4.07 1.837.79 2.502.85 3.398.718.528-.078 1.595-.652 1.82-1.282.225-.63.225-1.17.157-1.282-.068-.112-.248-.202-.518-.337z"/></svg>
+</a>
+
+<script>
+// Toggle card styling when checkbox state changes
+document.querySelectorAll('.service-card input[type="checkbox"]').forEach(checkbox => {
+  checkbox.addEventListener('change', (e) => {
+    e.target.closest('.service-card').classList.toggle('is-active', e.target.checked);
+  });
+});
+
+const contactForm = document.getElementById('contactForm');
+const formSuccess = document.getElementById('formSuccess');
+
+function showError(fieldId, message) {
+  const errorEl = contactForm.querySelector(`.field-error[data-for="${fieldId}"]`);
+  if (errorEl) errorEl.textContent = message;
+}
+
+function clearErrors() {
+  contactForm.querySelectorAll('.field-error').forEach((el) => (el.textContent = ''));
+}
+
+contactForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  clearErrors();
+  formSuccess.hidden = true;
+
+  const fullName = contactForm.fullName.value.trim();
+  const email = contactForm.email.value.trim();
+  const countryCode = contactForm.countryCode.value;
+  const phoneVal = contactForm.phone.value.trim();
+  const phone = `${countryCode} ${phoneVal}`;
+
+  // Get selected services
+  const selectedCheckboxes = contactForm.querySelectorAll('input[name="services"]:checked');
+  const servicesList = Array.from(selectedCheckboxes).map(cb => cb.value);
+  const service = servicesList.length > 0 ? servicesList.join(', ') : 'None';
+
+  const requirements = contactForm.requirements.value.trim();
+
+  let valid = true;
+
+  if (fullName.length < 2) {
+    showError('fullName', 'Please enter your full name.');
+    valid = false;
+  }
+
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailPattern.test(email)) {
+    showError('email', 'Please enter a valid email address.');
+    valid = false;
+  }
+
+  const phonePattern = /^[0-9+\-\s]{7,15}$/;
+  if (!phonePattern.test(phoneVal)) {
+    showError('phone', 'Please enter a valid phone number.');
+    valid = false;
+  }
+
+  if (!valid) return;
+
+  const submitBtn = contactForm.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'SUBMITTING...';
+
+  const leadData = {
+    fullName,
+    email,
+    phone,
+    service,
+    requirements
+  };
+
+  const apiHost = window.location.origin.includes(':3000') ? '' : 'http://localhost:3000';
+  fetch(`${apiHost}/api/leads`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(leadData),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then(data => {
+          throw new Error(data.error || `HTTP error ${response.status}`);
+        }).catch(() => {
+          throw new Error(`HTTP error ${response.status}`);
+        });
+      }
+      return response.json();
+    })
+    .then(() => {
+      formSuccess.hidden = false;
+      contactForm.reset();
+      // Remove is-active class from all cards
+      contactForm.querySelectorAll('.service-card').forEach(card => card.classList.remove('is-active'));
+    })
+    .catch((err) => {
+      showError('fullName', `Unable to submit: ${err.message || 'Please try again later.'}`);
+    })
+    .finally(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'SUBMIT';
+    });
+});
+
+// Share button handling
+const shareBtn = document.getElementById('shareBtn');
+if (shareBtn) {
+  shareBtn.addEventListener('click', () => {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Get in Touch with Bigwig Media Digital',
+        url: window.location.href
+      }).catch(console.error);
+    } else {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        alert('URL copied to clipboard!');
+      }).catch(console.error);
+    }
+  });
+}
+</script>
+</body>
+</html>
