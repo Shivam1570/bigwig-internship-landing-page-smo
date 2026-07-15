@@ -168,7 +168,9 @@ leadForm.addEventListener('submit', (e) => {
     requirements: leadForm.requirements.value.trim(),
   };
 
-  const apiHost = window.location.origin.includes(':3000') ? '' : 'http://localhost:3000';
+  const apiHost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? (window.location.origin.includes(':3000') ? '' : 'http://localhost:3000')
+    : '';
   fetch(`${apiHost}/api/leads`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
