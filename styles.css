@@ -564,18 +564,19 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .social-icon svg {
   width: 16px;
   height: 16px;
-  transition: fill 0.25s ease;
+  transition: fill 0.25s ease, stroke 0.25s ease;
 }
 
-.social-icon.fb svg { fill: #1877f2; }
-.social-icon.ig svg { fill: #e1306c; }
-.social-icon.yt svg { fill: #ff0000; }
-.social-icon.tw svg { fill: #ffffff; }
-.social-icon.ln svg { fill: #0077b5; }
-.social-icon.pin svg { fill: #bd081c; }
+.social-icon.fb svg { fill: #1877f2; stroke: #1877f2; }
+.social-icon.ig svg { fill: #e1306c; stroke: #e1306c; }
+.social-icon.yt svg { fill: #ff0000; stroke: #ff0000; }
+.social-icon.tw svg { fill: #ffffff; stroke: #ffffff; }
+.social-icon.ln svg { fill: #0077b5; stroke: #0077b5; }
+.social-icon.pin svg { fill: #bd081c; stroke: #bd081c; }
 
 .social-icon:hover svg {
   fill: #fff !important;
+  stroke: #fff !important;
 }
 
 /* Custom colors for social networks */
