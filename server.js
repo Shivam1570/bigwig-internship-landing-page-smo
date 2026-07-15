@@ -24,7 +24,7 @@ if (NO_FILE_SAVE) console.log('NO_FILE_SAVE mode enabled — data will not be wr
 
 // --- Simple .env loader (supports KEY=VAL and PowerShell $env:KEY='VAL') ---
 try {
-  const envPaths = [path.join(__dirname, '.env'), path.join(__dirname, 'node_modules', '.env')];
+  const envPaths = [path.join(process.cwd(), '.env'), path.join(process.cwd(), 'node_modules', '.env')];
   for (const p of envPaths) {
     if (!fs.existsSync(p)) continue;
     const content = fs.readFileSync(p, 'utf8');
@@ -88,9 +88,9 @@ const verifyPassword = (password, salt, hash) => {
   return h === hash;
 };
 
-const ADMINS_DB = path.join(__dirname, 'admins.json');
-const SESSIONS_DB = path.join(__dirname, 'sessions.json');
-const LEADS_DB = path.join(__dirname, 'leads.json');
+const ADMINS_DB = path.join(process.cwd(), 'admins.json');
+const SESSIONS_DB = path.join(process.cwd(), 'sessions.json');
+const LEADS_DB = path.join(process.cwd(), 'leads.json');
 
 // Initialize SQLite database or fall back to JSON/Memory storage if in serverless (Vercel)
 // or if sqlite3 native bindings fail to load.
@@ -163,7 +163,7 @@ try {
     db = createJsonFallbackDb();
   } else {
     const sqlite3 = require('sqlite3').verbose();
-    const DB_FILE = path.join(__dirname, 'data.sqlite');
+    const DB_FILE = path.join(process.cwd(), 'data.sqlite');
     db = new sqlite3.Database(DB_FILE, (err) => {
       if (err) {
         console.error('Failed to open SQLite DB, falling back to JSON storage:', err.message);
@@ -264,17 +264,17 @@ async function sendResetEmail(toEmail, resetToken, host, protocol) {
 
 // Serve admin auth before static assets so it can redirect
 app.get(['/admin-auth.html', '/admin-auth', '/admin-auth/'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin-auth.html'));
+  res.sendFile(path.join(process.cwd(), 'admin-auth.html'));
 });
 
 // Admin area - protected, redirect to auth if no session
 app.get(['/admin', '/admin.html', '/admin/'], (req, res) => {
   const s = getSession(req);
-  if (s) return res.sendFile(path.join(__dirname, 'admin.html'));
+  if (s) return res.sendFile(path.join(process.cwd(), 'admin.html'));
   return res.redirect('/admin-auth.html');
 });
 
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(process.cwd())));
 
 // --- Leads API ---
 app.post('/api/leads', (req, res) => {
@@ -390,7 +390,7 @@ app.post('/admin/reset', (req, res) => {
 
 // Fallback 404
 app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, '404.html'));
+  res.status(404).sendFile(path.join(process.cwd(), '404.html'));
 });
 
 app.listen(port, () => {
