@@ -3,7 +3,6 @@ const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
-const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -19,7 +18,8 @@ app.use((req, res, next) => {
 });
 
 // When set to 'true', do not write JSON files to disk — keep data in memory only.
-const NO_FILE_SAVE = (process.env.NO_FILE_SAVE === 'true');
+// Vercel serverless environment has a read-only filesystem, so we auto-enable this.
+const NO_FILE_SAVE = (process.env.NO_FILE_SAVE === 'true' || !!process.env.VERCEL);
 if (NO_FILE_SAVE) console.log('NO_FILE_SAVE mode enabled — data will not be written to disk');
 
 // --- Simple .env loader (supports KEY=VAL and PowerShell $env:KEY='VAL') ---
@@ -92,23 +92,99 @@ const ADMINS_DB = path.join(__dirname, 'admins.json');
 const SESSIONS_DB = path.join(__dirname, 'sessions.json');
 const LEADS_DB = path.join(__dirname, 'leads.json');
 
-// Initialize SQLite database for leads persistence (default)
-const DB_FILE = path.join(__dirname, 'data.sqlite');
-const db = new sqlite3.Database(DB_FILE, (err) => {
-  if (err) {
-    console.error('Failed to open SQLite DB:', err.message);
-    return;
+// Initialize SQLite database or fall back to JSON/Memory storage if in serverless (Vercel)
+// or if sqlite3 native bindings fail to load.
+let db;
+
+function createJsonFallbackDb() {
+  console.log('Using JSON/Memory fallback database for leads storage');
+  return {
+    run: function(sql, params, callback) {
+      const leads = readJSON(LEADS_DB);
+      if (sql.includes('INSERT')) {
+        const [fullName, email, phone, service, requirements, receivedAt] = params;
+        const newLead = {
+          id: Date.now(),
+          fullName,
+          email,
+          phone,
+          service,
+          requirements,
+          receivedAt
+        };
+        leads.push(newLead);
+        writeJSON(LEADS_DB, leads);
+        
+        // Emulate SQLite callback context (this.lastID)
+        const context = { lastID: newLead.id, changes: 1 };
+        if (callback) {
+          callback.call(context, null);
+        }
+      } else if (sql.includes('DELETE')) {
+        const id = Number(params[0]);
+        const initialLength = leads.length;
+        const filtered = leads.filter(l => Number(l.id) !== id);
+        writeJSON(LEADS_DB, filtered);
+        
+        // Emulate SQLite callback context (this.changes)
+        const changes = initialLength - filtered.length;
+        const context = { changes };
+        if (callback) {
+          callback.call(context, null);
+        }
+      }
+    },
+    get: function(sql, params, callback) {
+      const leads = readJSON(LEADS_DB);
+      if (sql.includes('SELECT') && sql.includes('id = ?')) {
+        const id = Number(params[0]);
+        const lead = leads.find(l => Number(l.id) === id);
+        if (callback) {
+          callback(null, lead || null);
+        }
+      }
+    },
+    all: function(sql, params, callback) {
+      const leads = readJSON(LEADS_DB);
+      // Sort by receivedAt DESC to match SQLite query
+      const sorted = [...leads].sort((a, b) => {
+        return (b.receivedAt || '').localeCompare(a.receivedAt || '');
+      });
+      if (callback) {
+        callback(null, sorted);
+      }
+    }
+  };
+}
+
+try {
+  // If running on Vercel, immediately use JSON/Memory fallback to avoid native compilation errors
+  if (process.env.VERCEL) {
+    db = createJsonFallbackDb();
+  } else {
+    const sqlite3 = require('sqlite3').verbose();
+    const DB_FILE = path.join(__dirname, 'data.sqlite');
+    db = new sqlite3.Database(DB_FILE, (err) => {
+      if (err) {
+        console.error('Failed to open SQLite DB, falling back to JSON storage:', err.message);
+        db = createJsonFallbackDb();
+        return;
+      }
+      db.run(`CREATE TABLE IF NOT EXISTS leads (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        fullName TEXT NOT NULL,
+        email TEXT NOT NULL,
+        phone TEXT NOT NULL,
+        service TEXT NOT NULL,
+        requirements TEXT,
+        receivedAt TEXT NOT NULL
+      )`, (e) => { if (e) console.error('Failed to create leads table:', e.message); });
+    });
   }
-  db.run(`CREATE TABLE IF NOT EXISTS leads (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    fullName TEXT NOT NULL,
-    email TEXT NOT NULL,
-    phone TEXT NOT NULL,
-    service TEXT NOT NULL,
-    requirements TEXT,
-    receivedAt TEXT NOT NULL
-  )`, (e) => { if (e) console.error('Failed to create leads table:', e.message); });
-});
+} catch (err) {
+  console.warn('SQLite3 module not available or failed to load. Falling back to JSON/Memory storage.', err.message);
+  db = createJsonFallbackDb();
+}
 
 const makeToken = () => crypto.randomBytes(24).toString('hex');
 
